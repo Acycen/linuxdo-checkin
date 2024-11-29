@@ -27,8 +27,13 @@ jobs:
           python main.py
   login_other:
     runs-on: ubuntu-latest
-    if: ${{ secrets.USERNAME2 && secrets.PASSWORD2 }} # 条件判断
     steps:
+      - name: Check if USERNAME2 and PASSWORD2 exist
+        run: |
+          if [[ -z "${{ secrets.USERNAME2 }}" || -z "${{ secrets.PASSWORD2 }}" ]]; then
+            echo "USERNAME2 or PASSWORD2 is not set. Skipping job."
+            exit 0
+          fi
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
