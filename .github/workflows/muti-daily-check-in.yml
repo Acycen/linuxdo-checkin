@@ -1,29 +1,47 @@
-name: Daily Check-in
+name: Muti Daily Check-in
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 每天1点 UTC 时间执行
+    - cron: "0 1 * * *" # 每天1点 UTC 时间执行
   workflow_dispatch:
 
 jobs:
-  run_script:
+  login_default:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.19'
-
+          python-version: "3.9.19"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           playwright install chromium
-
       - name: Execute script
         env:
           USERNAME: ${{ secrets.USERNAME }}
           PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          python main.py
+  login_other:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.USERNAME2 && secrets.PASSWORD2 }} # 条件判断
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9.19"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium
+      - name: Execute script
+        env:
+          USERNAME: ${{ secrets.USERNAME2 }}
+          PASSWORD: ${{ secrets.PASSWORD2 }}
         run: |
           python main.py
