@@ -32,7 +32,7 @@ jobs:
         run: |
           if [[ -z "${{ secrets.USERNAME2 }}" || -z "${{ secrets.PASSWORD2 }}" ]]; then
             echo "USERNAME2 or PASSWORD2 is not set. Skipping job."
-            exit 1
+            exit 0
           fi
       - uses: actions/checkout@v4
       - name: Set up Python
